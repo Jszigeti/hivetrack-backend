@@ -18,12 +18,16 @@ Task Flow is a simple, scalable application built with the NestJS framework to m
    npm install
    ```
 
-2. **Configure your PostgreSQL database**:
+2. **Add environment variables**:
 
-   Create a .env file at the root of your project (if not already created) and add your PostgreSQL connection details:
+   Create a .env file at the root of your project (if not already created) and include the following:
+
+   - DATABASE_URL: Connection string for your PostgreSQL database. Replace username, password, host, port, and db_name with your database credentials.
+   - SECRET_JWT: A secure, randomly generated string used to sign and verify JWT tokens. Ensure this value is kept secret and not shared publicly.
 
    ```bash
    DATABASE_URL="postgresql://username:password@host:port/db_name?schema=public"
+   SECRET_JWT="your-randomly-generated-secret-key"
    ```
 
 3. **Run Prisma migrations**:
