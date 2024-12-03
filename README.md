@@ -2,11 +2,11 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-# Task Flow
+# Hive Track
 
 ## Description
 
-Task Flow is a simple, scalable application built with the NestJS framework to manage and track tasks within a project. This starter template provides a foundation for building scalable backend applications with PostgreSQL database management using Prisma. It is designed for applications that require task workflow management, project tracking, and extensible features for more complex projects.
+Hive Track is a simple, scalable application built with the NestJS framework to manage and track tasks within a project. This starter template provides a foundation for building scalable backend applications with PostgreSQL database management using Prisma. It is designed for applications that require task workflow management, project tracking, and extensible features for more complex projects.
 
 ## Project Setup
 
