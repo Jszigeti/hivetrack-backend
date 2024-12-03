@@ -1,0 +1,192 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int               @id @default(autoincrement())
+  firstname       String        
+  lastname        String        
+  email           String            @unique
+  password        String        
+  status          UserStatus        @default(TO_CHECK)
+  role            UserRole          @default(USER)
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  notifications   Notification[]
+  tokens          Token[]
+  comments        Comment[]
+  files           File[]
+  projects        Project[]
+  tasks           Task[]
+  userProjects    UserProjects[]
+  userTasks       UserTasks[]
+}
+
+model Project {
+  id            Int               @id @default(autoincrement())
+  title         String        
+  desc          String        
+  pathCover     String            @map("path_cover")
+  creatorId     Int               @map("creator_id")
+  dateFrom      DateTime          @map("date_from")
+  dateTo        DateTime          @map("date_to")
+  status        ProjectStatus     @default(PENDING)
+  isPublic      Boolean           @map("is_public")
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+  creator       User              @relation(fields: [creatorId], references: [id])
+  tasks         Task[]
+  UserProjects  UserProjects[]
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  title       String
+  desc        String
+  projectId   Int         @map("project_id")
+  creatorId   Int       @map("creator_id")
+  status      TaskStatus    @default(PENDING)
+  dateFrom    DateTime  @map("date_from")
+  dateTo      DateTime  @map("date_to")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  creator     User      @relation(fields: [creatorId], references: [id])
+  project     Project   @relation(fields: [projectId], references: [id])
+  comments    Comment[]
+  files       File[]
+  UserTasks   UserTasks[]
+}
+
+model Notification {
+  id                  Int                           @id @default(autoincrement())
+  content             String
+  userId              Int                           @map("user_id")
+  isRead              Boolean                       @map("is_read")
+  referenceId         Int                           @map("reference_id")
+  referenceType       NotificationReferenceType     @map("reference_type")
+  referenceDetails    NotificationReferenceDetails  @map("reference_details")
+  createdAt           DateTime                      @default(now()) @map("created_at")
+  updatedAt           DateTime                      @updatedAt @map("updated_at")
+  user                User                          @relation(fields: [userId], references: [id])  
+}
+
+model Comment {
+  id              Int           @id @default(autoincrement())
+  content         String    
+  authorId        Int           @map("author_id")
+  taskId          Int           @map("task_id")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  author          User          @relation(fields: [authorId], references: [id])
+  task            Task          @relation(fields: [taskId], references: [id])
+}
+
+model File {
+  id              Int           @id @default(autoincrement())
+  path            String    
+  title           String?   
+  desc            String?   
+  taskId          Int           @map("task_id")
+  authorId        Int           @map("author_id")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  task            Task          @relation(fields: [taskId], references: [id])
+  author          User          @relation(fields: [authorId], references: [id])
+}
+
+model UserProjects {
+  projectId       Int           @map("project_id")
+  userId          Int           @map("user_id")
+  role            ProjectRole   @default(VIEWER)
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  project         Project       @relation(fields: [projectId], references: [id])
+  user            User          @relation(fields: [userId], references: [id])
+
+  @@id([projectId, userId])
+}
+
+model UserTasks {
+  taskId          Int           @map("task_id")
+  userId          Int           @map("user_id")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  task            Task          @relation(fields: [taskId], references: [id])
+  user            User          @relation(fields: [userId], references: [id])
+
+  @@id([taskId, userId])
+}
+
+model Token {
+  id              Int           @id @default(autoincrement())
+  userId          Int           @map("user_id")
+  token           String    
+  type            TokenType    
+  expiredAt       DateTime      @map("expired_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  user            User          @relation(fields: [userId], references: [id])
+
+  @@unique([userId, type])
+}
+
+enum UserStatus {
+  TO_CHECK
+  CHECKED
+  BANNED
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum ProjectStatus {
+  PENDING
+  IN_PROGRESS
+  FINISHED
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  FINISHED
+}
+
+enum NotificationReferenceType {
+  PROJECT
+  TASK
+  COMMENT
+  FILE
+}
+
+enum NotificationReferenceDetails {
+  NEW
+  EDIT
+  DELETE
+  ENDED
+  ENDED_SOON
+  STATUS
+  ROLE
+}
+
+enum ProjectRole {
+  VIEWER
+  COLLABORATOR
+  MANAGER
+}
+
+enum TokenType {
+  REFRESH
+  CHECK
+  PASSWORD
+}
