@@ -10,29 +10,29 @@ Task Flow is a simple, scalable application built with the NestJS framework to m
 
 ## Project Setup
 
-1. **Install dependencies**:
+1. **Run the project in development mode**:
 
-Make sure you have Node.js and npm installed on your machine. Then, install all the required dependencies by running:
+   Make sure you have Node.js and npm installed on your machine. Then, install all the required dependencies by running:
 
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
 2. **Configure your PostgreSQL database**:
 
-Create a .env file at the root of your project (if not already created) and add your PostgreSQL connection details:
+   Create a .env file at the root of your project (if not already created) and add your PostgreSQL connection details:
 
-```bash
-DATABASE_URL="postgresql://username:password@host:port/db_name?schema=public"
-```
+   ```bash
+   DATABASE_URL="postgresql://username:password@host:port/db_name?schema=public"
+   ```
 
 3. **Run Prisma migrations**:
 
-If you haven’t set up your database yet, run the following command to apply the initial migrations and create the database schemas:
+   If you haven’t set up your database yet, run the following command to apply the initial migrations and create the database schemas:
 
-```bash
-npx prisma migrate dev --name init
-```
+   ```bash
+   npx prisma migrate dev --name init
+   ```
 
 ## Development
 
